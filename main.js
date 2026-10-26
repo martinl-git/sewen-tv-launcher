@@ -2,6 +2,7 @@
 // the sites the launcher opens in place (Wants, HA, Cricket; punch list #12). It runs through TizenBrew's
 // debugger, so a site's own CSP cannot stop it. Off tv.lan: red = home, Back = a page back (home if stuck).
 // YouTube opens in place too (punch list #22): TizenTube runs here, and YouTube's own quit comes home.
+// LES MILLS+ too: static/mods/lesmills.js covers the site with a TV screen and owns Back there.
 (function () {
   if (window.top !== window.self) return;   // never inside frames (Finances, the overlay panel)
   var TV = 'https://tv.lan.calmetech.net';
@@ -19,6 +20,7 @@
   }
   if (location.origin === TV) return;
   var YOUTUBE = location.hostname === 'www.youtube.com';
+  var OWN_BACK = YOUTUBE || location.hostname === 'my.lesmillsondemand.com';   // these sites handle Back themselves
   if (YOUTUBE) {
     // YouTube quits with window.close() (second Back on its home; seen on the TV 2026-10-26): come home instead
     // of closing TizenBrew onto the Samsung menu. Back itself stays YouTube's.
@@ -57,7 +59,7 @@
   // Red button = back to Sewen TV, from any site (its overlay panel may be blocked by the site's CSP).
   document.addEventListener('keydown', function (e) {
     if (e.keyCode === 403) { e.preventDefault(); location.href = TV + '/'; }
-    else if (e.keyCode === 10009 && !YOUTUBE && !textEntry(focused())) { e.preventDefault(); if (!e.repeat) back(); }
+    else if (e.keyCode === 10009 && !OWN_BACK && !textEntry(focused())) { e.preventDefault(); if (!e.repeat) back(); }
   }, true);
   // TizenTube (ad-free YouTube) at a fixed version, checked against its SHA-384 (the same hash as
   // static/mods/youtube.js). youtube.com's CSP (nonce + Trusted Types) refuses <script src> from elsewhere, so the
@@ -77,7 +79,8 @@
     }).catch(function () {});
   }
   // The site scripts (overlay: long-press OK panel and pop-ups; spatial navigation) come from tv.lan.
-  var SITES = { 'wants.lan.calmetech.net': 'jellyseerr', 'hass.lan.calmetech.net': 'hass', 'cric.lan.calmetech.net': 'cricket' };
+  var SITES = { 'wants.lan.calmetech.net': 'jellyseerr', 'hass.lan.calmetech.net': 'hass', 'cric.lan.calmetech.net': 'cricket',
+    'my.lesmillsondemand.com': 'lesmills' };
   var site = SITES[location.hostname];
   if (!site) return;
   var parent = document.head || document.documentElement;
