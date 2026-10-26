@@ -1,6 +1,6 @@
 {
   "name": "sewen-tv-launcher",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "appName": "Sewen TV",
   "packageType": "mods",
   "websiteURL": "https://tv.lan.calmetech.net/",
@@ -23,6 +23,10 @@
     "6",
     "7",
     "8",
-    "9"
+    "9",
+    "MediaFastForward",
+    "MediaRewind",
+    "MediaTrackNext",
+    "MediaTrackPrevious"
   ]
 }
